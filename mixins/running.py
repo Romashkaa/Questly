@@ -73,17 +73,19 @@ class RunningMixin(telekit.Handler):
             
             self._history.append(scene_name)
 
+            print(self.chain.parent, self.chain)
+
             # main logic
             scene = self._scenes[scene_name]
             
-            chain: telekit.Chain = self.get_child()
+            # chain: telekit.Chain = self.get_child()
 
-            chain.sender.set_parse_mode(scene.get("parse_mode", "Markdown"))
-            chain.sender.set_use_italics(scene.get("use_italics", False))
+            self.chain.sender.set_parse_mode(scene.get("parse_mode", "Markdown"))
+            self.chain.sender.set_use_italics(scene.get("use_italics", False))
 
-            chain.sender.set_title(scene.get("title", "[ Title ]"))
-            chain.sender.set_message(scene.get("message", "[ Message ]"))
-            chain.sender.set_photo(scene.get("image", None))
+            self.chain.sender.set_title(scene.get("title", "[ Title ]"))
+            self.chain.sender.set_message(scene.get("message", "[ Message ]"))
+            self.chain.sender.set_photo(scene.get("image", None))
 
             # keyboard
             keyboard: dict = {}
@@ -91,8 +93,8 @@ class RunningMixin(telekit.Handler):
             for btn_label, btn_scene in scene.get("buttons", {}).items():
                 keyboard[btn_label] = self.prepare_scene(btn_scene)
 
-            chain.set_inline_keyboard(keyboard, scene.get("row_width", 1))
-            chain.edit()
+            self.chain.set_inline_keyboard(keyboard, scene.get("row_width", 1))
+            self.chain.edit()
 
         return lambda message=None: render()
 
